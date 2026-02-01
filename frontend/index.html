@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Hello World Fetch</title>
+</head>
+<body>
+  <h2>Frontend Page</h2>
+  <div id="content"></div>  <!-- Placeholder where fetched content will be inserted -->
+
+  <script>
+    // Function to fetch data from backend
+    async function fetchHello() {
+      try {
+        const response = await fetch('http://localhost:3000/hello');  // Make GET request to backend
+        if (!response.ok) {
+          throw new Error('Network response was not ok');  // Check if response is successful
+        }
+        const data = await response.text();  // Parse response as text (since it's HTML string)
+        document.getElementById('content').innerHTML = data;  // Inject the HTML into the DOM
+      } catch (error) {
+        console.error('Fetch error:', error);  // Log any errors
+      }
+    }
+
+    // Call the function when the page loads
+    window.onload = fetchHello;
+  </script>
+</body>
+</html>
+
+<!-- 
+Line-by-Line Explanation of Frontend JavaScript (inside <script> tag):
+
+1.  async function fetchHello() { ... }: 
+    - This defines an asynchronous function to handle the fetch operation. 
+    - async allows us to use await for promises, making the code easier to read than with .then().
+
+
+2.  try { ... } catch (error) { ... }: 
+    - A try-catch block is used to handle potential errors during the fetch, preventing the script
+      from crashing.
+
+3.  const response = await fetch('http://localhost:3000/hello');: 
+    - This uses the Fetch API to make a GET request to the backend endpoint.
+    - fetch() returns a Promise that resolves to the Response object.
+    - await pauses execution until the promise resolves.
+
+4.  The URL is hardcoded to the local backend for now (we'll update this later for deployment).
+
+5.  if (!response.ok) { throw new Error('Network response was not ok'); }: 
+    - This Checks if the HTTP status is in the 200-299 range (success). If not, throws 
+      an error to jump to the catch block.
+
+6.  const data = await response.text();: 
+    - This tells Browser to parse the response body as plain text (since our backend sends 
+      an HTML string, not JSON). 
+    - await waits for the parsing.
+
+7.  - document.getElementById('content').innerHTML = data;: 
+      This finds the <div id="content"> element in the HTML and sets its innerHTML to the 
+      fetched string, rendering <h1>Hello World</h1> on the page.
+
+8.  console.error('Fetch error:', error);: 
+    - In the catch block, this logs any errors to the browser console for debugging.
+
+9.  window.onload = fetchHello;: 
+    - This attaches the fetchHello function to the window's onload event, so it runs automatically 
+      when the page finishes loading.
+
+(A): To Run This Frontend: 
+
+    - With the backend running, open frontend/index.html in a browser (e.g., via file:// or a local 
+      server like Live Server in VS Code). It should fetch and display "Hello World" inside the div.
+
+
+(B):  Running the Full Project
+
+1.  Start the backend: 
+
+    - cd backend
+    - At the terminal prompt, type:
+      
+      node server.js
+
+
+2.  Open frontend/index.html in a browser.
+
+3.  You should see "Frontend Page" followed by the fetched "Hello World".
+
+This is a complete, runnable frontend-backend system. No CSS yet, as we're keeping it simple.
+-->
